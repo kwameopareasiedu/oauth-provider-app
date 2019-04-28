@@ -8,10 +8,13 @@ import { InputField, LoaderButton, HOCs } from "enscript-reusables";
 import { AUTHENTICATING } from "../../config/loading-entries";
 import { authenticate } from "../../actions/auth-actions";
 
-const Login = ({ history, loading, handleSubmit, authenticate }) => {
+const Login = ({ history, loading, qp, handleSubmit, authenticate }) => {
 	const interceptAuthenticate = values => {
-		authenticate(values, () => {
-			history.push("/main/post/all");
+		values.oauthRequestTokenKey = qp.oauth_request_token_key;
+		authenticate(values, verifiedOAuthKey => {
+			if (verifiedOAuthKey) {
+				history.push("/main/oauth/auth");
+			} else history.push("/main/post/all");
 		});
 	};
 
@@ -36,6 +39,7 @@ const Login = ({ history, loading, handleSubmit, authenticate }) => {
 };
 
 Login.propTypes = {
+	qp: PropTypes.object,
 	history: PropTypes.object,
 	loading: PropTypes.array,
 	fieldValues: PropTypes.object,
@@ -43,14 +47,16 @@ Login.propTypes = {
 	authenticate: PropTypes.func
 };
 
-export default withRouter(
-	connect(
-		state => ({ loading: state.loading }),
-		{ authenticate }
-	)(
-		HOCs.withForm({
-			name: "LoginForm",
-			required: ["email", "password"]
-		})(Login)
+export default HOCs.withQueryParams(
+	withRouter(
+		connect(
+			state => ({ loading: state.loading }),
+			{ authenticate }
+		)(
+			HOCs.withForm({
+				name: "LoginForm",
+				required: ["email", "password"]
+			})(Login)
+		)
 	)
 );

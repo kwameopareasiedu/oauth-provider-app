@@ -11,6 +11,7 @@ import Base from "./pages/base";
 import Login from "./pages/login";
 import AllPosts from "./pages/post/all";
 import OnePost from "./pages/post/one";
+import AuthorizeOAuth from "./pages/oauth/auth";
 import Page404 from "./pages/404";
 
 const store = applyMiddleware(ReduxThunk)(createStore)(reducers);
@@ -24,6 +25,7 @@ ReactDOM.render(
 				<Route path="/main/login" exact component={Login} />
 				<Route path="/main/post/all" exact component={AllPosts} />
 				<Route path="/main/post/show/:id" exact component={OnePost} />
+				<Route path="/main/oauth/auth" exact component={AuthorizeOAuth} />
 
 				<Route component={Page404} />
 			</Switch>

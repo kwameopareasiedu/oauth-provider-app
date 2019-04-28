@@ -8,7 +8,7 @@ const debug = require("debug")("oauth-provider-app");
 const MongoStore = require("connect-mongo")(session);
 const mongoose = require("mongoose");
 const helmet = require("helmet");
-const csurf = require("csurf");
+// const csurf = require("csurf");
 
 const app = express();
 
@@ -49,13 +49,13 @@ app.use(
 	})
 );
 app.use(helmet());
-app.use(csurf());
+// app.use(csurf());
 
-// Attach CSRF Token
-app.use((req, res, next) => {
-	if (process.env.NODE_ENV !== "testing") res.cookie("XSRF-TOKEN", req.csrfToken());
-	return next();
-});
+// // Attach CSRF Token
+// app.use((req, res, next) => {
+// 	if (process.env.NODE_ENV !== "testing") res.cookie("XSRF-TOKEN", req.csrfToken());
+// 	return next();
+// });
 //=================================================================
 
 //=====================SETUP ROUTES================================

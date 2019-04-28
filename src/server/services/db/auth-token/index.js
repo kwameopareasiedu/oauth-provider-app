@@ -3,7 +3,8 @@ const destroy = require("./destroy");
 const edit = require("./edit");
 const findAll = require("./find-all");
 const findById = require("./find-by-id");
+const findByKey = require("./find-by-key");
 const findByUserId = require("./find-by-user-id");
 const findWhereConditions = require("./find-where-conditions");
 
-module.exports = { create, destroy, edit, findAll, findById, findByUserId, findWhereConditions };
+module.exports = { create, destroy, edit, findAll, findById, findByUserId, findByKey, findWhereConditions };

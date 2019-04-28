@@ -2,7 +2,7 @@ import axios from "axios";
 import { utils } from "enscript-reusables";
 import { addAndRemoveFlash } from "./flash-actions";
 import { addLoadingEntry, removeLoadingEntry } from "./loading-actions";
-import { AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED, UNAUTHENTICATING_SUCCESS } from "../config/action-types";
+import { AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED, UNAUTHENTICATING_SUCCESS, OAUTH_AUTHENTICATION_SUCCESS } from "../config/action-types";
 import { AUTHENTICATING, UNAUTHENTICATING } from "../config/loading-entries";
 import { API_URL } from "../config/url";
 
@@ -16,9 +16,13 @@ export const authenticate = (values, successCallback) => dispatch => {
 		.post(resolveUrl("login"), values)
 		.then(response => {
 			dispatch(removeLoadingEntry(AUTHENTICATING));
-			dispatch({ type: AUTHENTICATION_SUCCESS });
+
+			if (response.data.verifiedOAuthKey) {
+				dispatch({ type: OAUTH_AUTHENTICATION_SUCCESS, verifiedOAuthKey: response.data.verifiedOAuthKey });
+			} else dispatch({ type: AUTHENTICATION_SUCCESS });
+
 			dispatch(addAndRemoveFlash("success", "Authenticated"));
-			if (successCallback) successCallback(response.data.nextUrl);
+			if (successCallback) successCallback(response.data.verifiedOAuthKey);
 		})
 		.catch(err => {
 			console.error(err);
